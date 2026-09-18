@@ -1,0 +1,64 @@
+services:
+  vllm-b65-test:
+    image: vllm/vllm-openai-xpu@sha256:96db42e248d48760a4937eb3d04c4878b39d13a9814efea95d510393e097a901
+    container_name: vllm-b65-cookbook-test
+    profiles: [manual]
+    restart: "no"
+    devices:
+      - /dev/dri:/dev/dri
+    ipc: host
+    shm_size: 1g
+    mem_limit: 16g
+    memswap_limit: 16g
+    pids_limit: 512
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "127.0.0.1:${PORT:-8000}:8000"
+    environment:
+      VLLM_TARGET_DEVICE: xpu
+      VLLM_WORKER_MULTIPROC_METHOD: spawn
+      VLLM_XPU_ENABLE_XPU_GRAPH: "0"
+      PYTORCH_ALLOC_CONF: expandable_segments:True
+    volumes:
+      - ${HF_CACHE:?Set HF_CACHE in .env}:/root/.cache/huggingface
+      - vllm_compile_cache:/root/.cache/vllm
+    command:
+      - Qwen/Qwen3.8-27B-FP8
+      - --served-model-name
+      - Qwen3.8-27B-FP8
+      - --tensor-parallel-size
+      - "2"
+      - --distributed-executor-backend
+      - mp
+      - --max-model-len
+      - "131072"
+      - --max-num-batched-tokens
+      - "256"
+      - --max-num-seqs
+      - "2"
+      - --enable-prefix-caching
+      - --prefix-cache-retention-interval
+      - "832"
+      - --gpu-memory-utilization
+      - "0.95"
+      - --cpu-offload-gb
+      - "0"
+      - --limit-mm-per-prompt.image
+      - "0"
+      - --limit-mm-per-prompt.video
+      - "0"
+      - --enable-auto-tool-choice
+      - --tool-call-parser
+      - qwen3_coder
+      - --reasoning-parser
+      - qwen3
+      - --speculative-config
+      - '{"method":"mtp","num_speculative_tokens":2}'
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+
+volumes:
+  vllm_compile_cache:
