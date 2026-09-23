@@ -1,6 +1,6 @@
 # What we learned on 2 × B65
 
-This page records the earlier tests through September 18, 2026. The later vLLM 0.30.0 / XPU-kernels 0.1.15 tests and MTP-3 promotion are documented in the [upgrade journey](upgrade-journey-2026-09-23.md).
+This page records the earlier tests through September 18, 2026. The later vLLM 0.30.0 / XPU-kernels 0.1.15 tests and MTP-3 promotion are documented in the [standalone upgrade report](https://github.com/ageladek/intel-arc-pro-b65-vllm-upgrade-journey).
 
 All statements below refer to Qwen3.8-27B-FP8 with vLLM XPU and TP=2 unless stated otherwise. They are measurements or observed failures, not general Intel GPU claims.
 

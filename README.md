@@ -4,7 +4,7 @@ Reproducible notes for serving **Qwen3.8-27B-FP8** with vLLM XPU on two Intel Ar
 
 Status: **early public draft, updated 2026-09-23**. The example recipe is a *test profile*, not an instruction to replace a running production service. Never start it while another XPU model owns the GPUs.
 
-**New chapter:** [From a 180K MTP-2 service to a 256K MTP-3 service](docs/upgrade-journey-2026-09-23.md) covers the vLLM/XPU-kernel updates, failed configurations, full `llama-benchy` comparison, and production cutover. The recipe below remains the older conservative example, not the newly promoted profile.
+**Standalone follow-up:** [From a 180K MTP-2 service to a 256K MTP-3 service](https://github.com/ageladek/intel-arc-pro-b65-vllm-upgrade-journey) covers the vLLM/XPU-kernel updates, failed configurations, full `llama-benchy` comparison, and production cutover. The recipe below remains the older conservative example, not the newly promoted profile.
 
 ## What is actually measured
 
@@ -20,7 +20,7 @@ The short gate used three single requests and one concurrent pair per candidate;
 
 - 2 × Intel Arc Pro B65, 32 GB GDDR6 each, PCI device `8086:e222`; memory is **not** a single pooled 64 GB allocation. [Intel specifications](https://www.intel.com/content/www/us/en/products/sku/245796/intel-arc-pro-b65-graphics/specifications.html).
 - AMD Ryzen 5 7600X, 32 GB system RAM, Ubuntu 24.04.4, Linux `7.0.0-31-generic` at the time of this snapshot.
-- At the September 18 snapshot: vLLM XPU, Qwen3.8-27B-FP8, TP=2, MTP-2, `max-num-seqs=2`, 256 batched tokens, no CPU offload, no container swap. The then-production context limit was 180,224 tokens. The September 23 profile is described in the [new chapter](docs/upgrade-journey-2026-09-23.md).
+- At the September 18 snapshot: vLLM XPU, Qwen3.8-27B-FP8, TP=2, MTP-2, `max-num-seqs=2`, 256 batched tokens, no CPU offload, no container swap. The then-production context limit was 180,224 tokens. The September 23 profile is described in the [standalone follow-up](https://github.com/ageladek/intel-arc-pro-b65-vllm-upgrade-journey).
 - Production serves text only. Vision and document OCR are out of scope here.
 
 The host facts are a point-in-time observation, not a required parts list. More detail: [docs/hardware.md](docs/hardware.md).
@@ -57,7 +57,7 @@ For an authenticated endpoint, set `VLLM_API_KEY` in the shell; do not put it in
 
 - Speed is workload-, context-, image-, driver-, and metric-dependent. `decode tok/s` is not end-to-end tok/s, and aggregate concurrent throughput is not per-user speed.
 - MTP-2 improved decode in our short depth test, but the former production build hit an EngineCore failure near its 180K context limit. Upstream [XPU kernel PR #600](https://github.com/vllm-project/vllm-xpu-kernels/pull/600) addresses the same assertion text; a later successful test does not by itself prove the exact root cause fixed or guarantee future stability.
-- On September 23, a separate vLLM 0.30.0 + kernels 0.1.15 image passed a 256K/MTP-3 suite and was promoted; MTP-4 still faulted. See the [upgrade chapter](docs/upgrade-journey-2026-09-23.md) and the earlier [lessons](docs/lessons.md). This does not make the conservative Compose recipe a tested production replacement.
+- On September 23, a separate vLLM 0.30.0 + kernels 0.1.15 image passed a 256K/MTP-3 suite and was promoted; MTP-4 still faulted. See the [standalone upgrade report](https://github.com/ageladek/intel-arc-pro-b65-vllm-upgrade-journey) and the earlier [lessons](docs/lessons.md). This does not make the conservative Compose recipe a tested production replacement.
 
 ## Licenses
 
