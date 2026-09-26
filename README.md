@@ -2,9 +2,11 @@
 
 Reproducible notes for serving **Qwen3.8-27B-FP8** with vLLM XPU on two Intel Arc Pro B65 GPUs (tensor parallelism = 2). This is an independent, early-stage cookbook inspired by the evidence-first layout of [SergiioB's B70 cookbook](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook); no code or benchmark data is copied from it.
 
-Status: **early public draft, updated 2026-09-23**. The example recipe is a *test profile*, not an instruction to replace a running production service. Never start it while another XPU model owns the GPUs.
+Status: **early public draft, updated 2026-09-26**. The example recipe is a *test profile*, not an instruction to replace a running production service. Never start it while another XPU model owns the GPUs.
 
 **Standalone follow-up:** [From a 180K MTP-2 service to a 256K MTP-3 service](https://github.com/ageladek/intel-arc-pro-b65-vllm-upgrade-journey) covers the vLLM/XPU-kernel updates, failed configurations, full `llama-benchy` comparison, and production cutover. The recipe below remains the older conservative example, not the newly promoted profile.
+
+**Standalone follow-up (2026-09-26):** [FP8 vs BF16 KV cache on two Arc Pro B65 GPUs](https://github.com/ageladek/intel-arc-pro-b65-kv-cache-comparison) compares 32K/64K speed, TTFT, MTP acceptance, cache capacity, and the relevant serving parameters. The conservative Compose recipe below has not been changed.
 
 ## What is actually measured
 
